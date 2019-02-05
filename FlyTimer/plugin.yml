@@ -1,12 +1,12 @@
 main: me.wsman217.FlyPlugin.Main
 name: FlightTimer
-version: 1.0
+version: 1.2
 author: wsman217
 description: A plugin that allows you to fly without creative.
 commands: 
   fly: 
     description: Allows or takes away flight.
-    usage: /fly
+    usage: /fly <player> 
     permission: fly.command.use
     
   flytimer:

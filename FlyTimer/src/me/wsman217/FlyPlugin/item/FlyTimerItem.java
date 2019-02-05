@@ -8,6 +8,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -67,6 +69,21 @@ public class FlyTimerItem implements Listener {
 					}
 				}
 			}
+		}
+	}
+	
+	@EventHandler
+	public void onFallDamage(EntityDamageEvent e) {
+		if (e.getCause() == DamageCause.FALL) {
+			Player p = (Player) e.getEntity();
+			if (plugin.falling.contains(p.getName())) {
+				e.setCancelled(true);
+				plugin.falling.remove(p.getName());
+			} else if (!plugin.falling.contains(p.getName())) {
+				e.setCancelled(false);
+			}
+		} else if(e.getCause() != DamageCause.FALL) {
+			e.setCancelled(false);
 		}
 	}
 }

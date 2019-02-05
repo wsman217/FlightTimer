@@ -13,6 +13,7 @@ public class Main extends JavaPlugin {
 	public Messages messages;
 
 	public ArrayList<String> flying = new ArrayList<String>();
+	public ArrayList<String> falling = new ArrayList<String>();
 
 	@Override
 	public void onEnable() {
@@ -45,6 +46,19 @@ public class Main extends JavaPlugin {
 				target.setAllowFlight(false);
 				target.sendMessage(messages.MSG_FLIGHT_OVER);
 				flying.remove(target.getName());
+				falling.add(target.getName());
+				negateFall(600, target);
+			}
+		}, time);
+	}
+	
+	@SuppressWarnings("deprecation")
+	public void negateFall(int time, Player target) {
+		Bukkit.getScheduler().scheduleSyncDelayedTask(this, new BukkitRunnable() {
+			public void run() {
+				if (falling.contains(target.getName())) {
+					falling.remove(target.getName());
+ 				}
 			}
 		}, time);
 	}

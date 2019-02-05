@@ -31,33 +31,50 @@ public class FlyCommand implements CommandExecutor {
 					p.sendMessage(plugin.messages.MSG_NOPERMISSION);
 					return true;
 
-				} else if (!(args.length == 0)) {
-
-					p.sendMessage(
-							ChatColor.AQUA + "[Fly]: " + ChatColor.BLUE + "Incorrect arguement: " + args[0] + ".");
-					p.sendMessage(ChatColor.AQUA + "[Fly]: " + ChatColor.BLUE + "Use /fly instead.");
-					return true;
-
 				}
+				if (args.length < 1) {
+					if (p.getAllowFlight() == false) {
 
-				if (p.getAllowFlight() == false) {
+						p.setAllowFlight(true);
+						p.sendMessage(plugin.messages.MSG_FLYON);
+						if (!plugin.flying.contains(p.getName())) {
+							plugin.flying.add(p.getName());
+						}
+						if (!plugin.falling.contains(p.getName())) {
+							plugin.falling.add(p.getName());
+						}
+						return true;
 
-					p.setAllowFlight(true);
-					p.sendMessage(plugin.messages.MSG_FLYON);
-					if (!plugin.flying.contains(p.getName())) {
-						plugin.flying.add(p.getName());
+					} else if (p.getAllowFlight() == true) {
+						p.setAllowFlight(false);
+						p.sendMessage(plugin.messages.MSG_FLYOFF);
+						plugin.negateFall(600, p);
+
+						return true;
 					}
-					return true;
-
-				} else if (p.getAllowFlight() == true) {
-
-					p.setAllowFlight(false);
-					p.sendMessage(plugin.messages.MSG_FLYOFF);
-
-					if (plugin.flying.contains(p.getName())) {
-						plugin.flying.remove(p.getName());
+				} else if (args.length == 1) {
+					if (p.getServer().getPlayer(args[0]) != null) {
+						Player target = p.getServer().getPlayer(args[0]);
+						if (target.getAllowFlight() == true) {
+							target.setAllowFlight(false);
+							target.sendMessage(plugin.messages.MSG_FLYOFF);
+							plugin.negateFall(600, target);
+							p.sendMessage(ChatColor.AQUA + "[Fly]: " + ChatColor.BLUE + "Flight has been disabled for "
+									+ args[0]);
+							return true;
+						} else if (target.getAllowFlight() == false) {
+							target.setAllowFlight(true);
+							target.sendMessage(plugin.messages.MSG_FLYON);
+							plugin.flying.add(target.getName());
+							plugin.falling.add(target.getName());
+							p.sendMessage(ChatColor.AQUA + "[Fly]: " + ChatColor.BLUE + "Flight has been enabled for "
+									+ args[0]);
+							return true;
+						}
+					} else if (p.getServer().getPlayer(args[1]) == null) {
+						p.sendMessage(ChatColor.RED + "This player is not currently online.");
+						return true;
 					}
-					return true;
 
 				}
 			} else if (!plugin.getConfig().getBoolean("Commands.FlyCommandEnabled")) {

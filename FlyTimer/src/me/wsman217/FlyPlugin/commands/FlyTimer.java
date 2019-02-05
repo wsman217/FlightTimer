@@ -43,10 +43,10 @@ public class FlyTimer implements CommandExecutor {
 				return true;
 
 			}
-			
+
 			if (isInt(args[0])) {
-	            int num = Integer.parseInt(args[0]);
-	            ItemStack feather = new ItemStack(Material.FEATHER);
+				int num = Integer.parseInt(args[0]);
+				ItemStack feather = new ItemStack(Material.FEATHER);
 				ItemMeta meta = feather.getItemMeta();
 				ArrayList<String> lore = new ArrayList<String>();
 				meta.setDisplayName(ChatColor.AQUA + "Feather Of Flight");
@@ -55,18 +55,28 @@ public class FlyTimer implements CommandExecutor {
 				meta.setLore(lore);
 				feather.setItemMeta(meta);
 				feather.addUnsafeEnchantment(Enchantment.LUCK, 1);
-				p.getInventory().addItem(feather);
-	        }
+				if (args.length < 2) {
+					p.getInventory().addItem(feather);
+				} else if (args.length == 2) {
+					if (p.getServer().getPlayer(args[1]) != null) {
+						Player target = p.getServer().getPlayer(args[1]);
+						target.getInventory().addItem(feather);
+					} else if (p.getServer().getPlayer(args[1]) == null) {
+						p.sendMessage(ChatColor.RED + "This player is not currently online.");
+					}
+				} 
+				return true;
+			}
 		}
 		return false;
 	}
-	
+
 	public static boolean isInt(String s) {
-	    try {
-	        Integer.parseInt(s);
-	    } catch (NumberFormatException nfe) {
-	        return false;
-	    }
-	    return true;
+		try {
+			Integer.parseInt(s);
+		} catch (NumberFormatException nfe) {
+			return false;
+		}
+		return true;
 	}
 }
