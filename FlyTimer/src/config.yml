@@ -24,3 +24,7 @@ Messages:
   Fly_On: "&b[Fly]: &aOn."
   Fly_Off: "&b[Fly]: &cOff."
   FlightTimerOff: "&b[Fly]: &cFlight your flight time is finished."
+
+Commands:
+  #True for enabled, false for disabled
+  FlyCommandEnable: true

@@ -18,46 +18,51 @@ public class FlyCommand implements CommandExecutor {
 
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (!(sender instanceof Player)) {
-			
+
 			System.out.println(plugin.messages.MSG_PLAYERSONLY);
 			return true;
 
 		} else if (sender instanceof Player) {
-
 			Player p = (Player) sender;
+			if (plugin.getConfig().getBoolean("Commands.FlyCommandEnable")) {
 
-			if (!(p.hasPermission("fly.command.use"))) {
+				if (!(p.hasPermission("fly.command.use"))) {
 
-				p.sendMessage(plugin.messages.MSG_NOPERMISSION);
-				return true;
+					p.sendMessage(plugin.messages.MSG_NOPERMISSION);
+					return true;
 
-			} else if (!(args.length == 0)) {
-				
-				p.sendMessage(ChatColor.AQUA + "[Fly]: " + ChatColor.BLUE + "Incorrect arguement: " + args[0] + ".");
-				p.sendMessage(ChatColor.AQUA + "[Fly]: " + ChatColor.BLUE + "Use /fly instead.");
-				return true;
-				
-			}
+				} else if (!(args.length == 0)) {
 
-			if (p.getAllowFlight() == false) {
-				
-				p.setAllowFlight(true);
-				p.sendMessage(plugin.messages.MSG_FLYON);
-				if (!plugin.flying.contains(p.getName())) {
-					plugin.flying.add(p.getName());
+					p.sendMessage(
+							ChatColor.AQUA + "[Fly]: " + ChatColor.BLUE + "Incorrect arguement: " + args[0] + ".");
+					p.sendMessage(ChatColor.AQUA + "[Fly]: " + ChatColor.BLUE + "Use /fly instead.");
+					return true;
+
 				}
-				return true;
-				
-			} else if (p.getAllowFlight() == true) {
-				
-				p.setAllowFlight(false);
-				p.sendMessage(plugin.messages.MSG_FLYOFF);
-				
-				if (plugin.flying.contains(p.getName())) {
-					plugin.flying.remove(p.getName());
+
+				if (p.getAllowFlight() == false) {
+
+					p.setAllowFlight(true);
+					p.sendMessage(plugin.messages.MSG_FLYON);
+					if (!plugin.flying.contains(p.getName())) {
+						plugin.flying.add(p.getName());
+					}
+					return true;
+
+				} else if (p.getAllowFlight() == true) {
+
+					p.setAllowFlight(false);
+					p.sendMessage(plugin.messages.MSG_FLYOFF);
+
+					if (plugin.flying.contains(p.getName())) {
+						plugin.flying.remove(p.getName());
+					}
+					return true;
+
 				}
+			} else if (!plugin.getConfig().getBoolean("Commands.FlyCommandEnabled")) {
+				p.sendMessage(ChatColor.AQUA + "[Fly]: " + ChatColor.RED + "This command has been disabled.");
 				return true;
-				
 			}
 		}
 		return false;
